@@ -1,2 +1,2 @@
 # deno-openai-tts
-一个兼容openai tts的deno脚本
+一个兼容openai tts api的deno脚本
