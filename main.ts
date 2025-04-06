@@ -76,26 +76,37 @@ async function handleRequest(req: Request): Promise<Response> {
     });
   }
 
-  if (unauthorized(req)) {
-    console.log("未授权的请求");
-    return new Response("Unauthorized", { status: 401, headers: makeCORSHeaders() });
-  }
 
   switch (path) {
-    case "/v1/audio/speech":
       if (req.method !== "POST") {
         return new Response("Method Not Allowed", { status: 405, headers: makeCORSHeaders() });
+      }
+      if (unauthorized(req)) {
+        console.log("未授权的请求");
+        return new Response("Unauthorized", { status: 401, headers: makeCORSHeaders() });
       }
       return await handleOpenAITTSRequest(req);
     case "/tts":
       if (req.method !== "GET" && req.method !== "POST") {
         return new Response("Method Not Allowed", { status: 405, headers: makeCORSHeaders() });
       }
+      /*如需认证添加
+      if (unauthorized(req)) {
+        console.log("未授权的请求");
+        return new Response("Unauthorized", { status: 401, headers: makeCORSHeaders() });
+      }
+      */
       return await handleTTSRequest(url, req);
     case "/voices":
       if (req.method !== "GET") {
         return new Response("Method Not Allowed", { status: 405, headers: makeCORSHeaders() });
       }
+      /*如需认证添加
+      if (unauthorized(req)) {
+        console.log("未授权的请求");
+        return new Response("Unauthorized", { status: 401, headers: makeCORSHeaders() });
+      }
+      */
       return await handleVoicesRequest(url);
     default:
       return serveHomepage(url);
